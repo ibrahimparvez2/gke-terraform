@@ -3,6 +3,10 @@ name: Terraform Plan
 on:
   pull_request:
 
+permissions:
+  issues: write
+  pull-requests: write
+ 
 env:
   TERRAFORM_VERSION: "1.2.9"
   TF_IN_AUTOMATION: "True"
@@ -11,10 +15,6 @@ env:
 jobs:
   terraform_plan:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-      issues: write 
     if: github.event.review.state != 'approved'
     steps:
       - uses: actions/checkout@v3
