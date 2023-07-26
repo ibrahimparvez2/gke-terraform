@@ -1,0 +1,23 @@
+name: Terraform Apply
+
+on:
+ push:
+   branches: [main]
+
+env:
+  TERRAFORM_VERSION: "1.2.9"
+  TF_IN_AUTOMATION: "True"
+
+jobs:
+  terraform_apply:
+    runs-on: ubuntu-latest
+
+      - name: Terraform Apply
+        uses: ./.github/apply
+        with:
+          terraform_sa: ${{ secrets.TF_SA }}
+          terraform_directory: "."
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          google_sa_key: ${{ secrets.GOOGLE_CREDENTIALS }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          pr_id: ${{ steps.pr-id.outputs.PR_NUMBER }}
