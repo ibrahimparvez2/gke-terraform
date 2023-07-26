@@ -1,8 +1,12 @@
 name: Terraform Apply
 
 on:
- push:
-   branches: [main]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  issues: write
+  pull-requests: write
 
 env:
   TERRAFORM_VERSION: "1.2.9"
@@ -11,6 +15,19 @@ env:
 jobs:
   terraform_apply:
     runs-on: ubuntu-latest
+    if: github.event.review.state == 'approved'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get PR ID
+        id: pr-id
+        shell: bash
+        env:
+          GITHUB_REF: ${{ inputs.github_ref }}
+        run: |
+          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
+
 
       - name: Terraform Apply
         uses: ./.github/apply
