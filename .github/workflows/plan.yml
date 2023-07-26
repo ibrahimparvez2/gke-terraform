@@ -26,7 +26,7 @@ jobs:
       - name: Terraform Plan
         uses: ./.github/plan
         with:
-          terraform_directory: "terraform"
+          terraform_directory: "."
           terraform_sa: ${{ secrets.TF_SA }}
           terraform_version: ${{ env.TERRAFORM_VERSION }}
           google_sa_key: ${{ secrets.GOOGLE_CREDENTIALS }}
