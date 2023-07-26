@@ -6,7 +6,7 @@ on:
 env:
   TERRAFORM_VERSION: "1.2.9"
   TF_IN_AUTOMATION: "True"
-  TF_VAR_project_id: "{{ secrets.GKE_PROJECT }}"
+  TF_VAR_project_id: ${{ secrets.GKE_PROJECT }}
 
 jobs:
   terraform_plan:
