@@ -11,7 +11,7 @@ export GOOGLE_APPLICATION_CREDENTIALS="auth.json"
 
 
 terraform plan
-```  
+```   
 
 
 
