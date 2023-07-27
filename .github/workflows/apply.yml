@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  TERRAFORM_VERSION: "1.2.9"
+  TERRAFORM_VERSION: "1.3.0"
   TF_IN_AUTOMATION: "True"
   TF_VAR_project_id: ${{ secrets.GKE_PROJECT }}
   GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
