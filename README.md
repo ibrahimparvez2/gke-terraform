@@ -1,18 +1,18 @@
 # gke-terraform
 
 
-Initial setup setup.sh to be moved to terraform i.e. IAM.tf creating service account and role bindings. 
+running locally 
 
 ```
-gcloud iam service-accounts create terraform-ci
+gcloud iam service-accounts create <sa-name>
 
-gcloud projects add-iam-policy-binding <projet-id> --member="serviceAccount:terraform-ci@<project-id>.iam.gserviceaccount.com" --role="roles/owner"
-export GOOGLE_APPLICATION_CREDENTIALS="auth.json"
+gcloud projects add-iam-policy-binding <projet-id> --member="serviceAccount:<sa-name>@<project-id>.iam.gserviceaccount.com" --role="roles/owner"
 
 
+export GOOGLE_APPLICATION_CREDENTIALS="../my_auth.json"
+
+cd terraform
+terraform init
 terraform plan
 ```      
-
- 
-
 
