@@ -51,3 +51,10 @@ jobs:
           echo 'plan<<EOF' >> $GITHUB_OUTPUT
           terraform plan -no-color -out=tfplan >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
+      
+      - name: Terraform  apply
+        id: apply
+        working-directory: terraform
+        shell: bash
+        run: |
+          terraform apply tfplan -auto-approve -no-color
