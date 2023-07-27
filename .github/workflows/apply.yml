@@ -20,11 +20,35 @@ jobs:
       - uses: actions/checkout@v3
 
 
-      - name: Terraform Apply
-        uses: ./.github/apply
-        with:
-          terraform_directory: "terraform"
-          terraform_sa: ${{ secrets.TF_SA }}
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-          google_sa_key: ${{ secrets.GOOGLE_CREDENTIALS }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: ${{ inputs.terraforom_version }}
+        terraform_wrapper: false
+
+    - id: 'auth'
+      name: 'Authenticate to Google Cloud'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        service_account: ${{ secrets.TF_SA }}
+        credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v0.6.0'
+
+    - name: Terraform Init
+      id: init
+      working-directory: terraform
+      shell: bash
+      run: |
+        terraform init
+    
+
+   - name: Terraform Plan
+      id: plan
+      working-directory: terraform
+      shell: bash
+      run: |
+        echo 'plan<<EOF' >> $GITHUB_OUTPUT
+        terraform plan -no-color -out=tfplan >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
