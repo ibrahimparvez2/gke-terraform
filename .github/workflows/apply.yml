@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - main
-  pull_request:
 
 env:
   TERRAFORM_VERSION: "1.2.9"
