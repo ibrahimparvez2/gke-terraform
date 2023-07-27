@@ -5,4 +5,4 @@ terraform {
     bucket = "gke1-tf-state"
     prefix = "dev"
   }
-}
+} 
