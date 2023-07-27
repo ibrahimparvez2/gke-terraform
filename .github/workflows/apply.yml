@@ -57,4 +57,4 @@ jobs:
         working-directory: terraform
         shell: bash
         run: |
-          terraform apply tfplan -auto-approve -no-color
+          terraform apply -auto-approve -no-color tfplan
