@@ -43,8 +43,7 @@ jobs:
         run: |
           terraform init
       
-
-    - name: Terraform Plan
+      - name: Terraform Plan
         id: plan
         working-directory: terraform
         shell: bash
