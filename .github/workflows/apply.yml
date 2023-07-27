@@ -1,40 +1,50 @@
-name: Terraform Apply
+name: 'Terraform CI'
 
 on:
-  issue_comment:                                     
-    types: [created]
-
-permissions:
-  issues: write
-  pull-requests: write
+  push:
+    branches:
+    - main
+  pull_request:
 
 env:
   TERRAFORM_VERSION: "1.2.9"
   TF_IN_AUTOMATION: "True"
+  TF_VAR_project_id: ${{ secrets.GKE_PROJECT }}
 
 jobs:
-  terraform_apply:
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
-    if: contains(github.event.comment.body, '/apply')
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: Get PR ID
-        id: pr-id
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
         shell: bash
-        env:
-          GITHUB_REF: ${{ inputs.github_ref }}
-        run: |
-          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
-          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_OUTPUT
 
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
 
-      - name: Terraform Apply
-        uses: ./.github/apply
-        with:
-          terraform_sa: ${{ secrets.TF_SA }}
-          terraform_directory: "."
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-          google_sa_key: ${{ secrets.GOOGLE_CREDENTIALS }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_id: ${{ steps.pr-id.outputs.PR_NUMBER }}
+    
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Terraform Init
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Format
+      run: terraform fmt -check
+
+    - name: Terraform Plan
+      run: terraform plan
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
