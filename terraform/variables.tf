@@ -50,11 +50,11 @@ variable "cpus" {
 
 variable "minnode" {
   description = "Minimum number of node pool"
-  default     = 6
+  default     = 1
 }
 variable "maxnode" {
   description = "Maximum number of node pool"
-  default     = 12
+  default     = 3
 }
 
 variable "disksize" {
